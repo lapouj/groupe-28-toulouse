@@ -1,7 +1,7 @@
 # Rendu — TechCorp Financial Assistant
 
 Projet repris après compromission de l'équipe précédente. Livrables par filière.
-**Équipe (Groupe 28) : voir `EQUIPE.md`.** Vue d'ensemble technique : `../CLAUDE.md`.
+**Équipe (Groupe 28) : voir `EQUIPE.md`.
 
 **Documents transverses :** `RAPPORT_FINAL.{md,pdf}` (bilan complet + reste à faire),
 `PRESENTATION_ORALE.{md,pdf}` (trame 5 min minutée avec démo live),
@@ -49,6 +49,3 @@ python rendu/ia/validate_model.py
 # 4. CYBER — tests de robustesse
 python rendu/cyber/robustness_test.py
 ```
-
-> Ces commandes tournent sur ta machine. En session Claude Code, préfixe par `!`
-> pour les exécuter dans la conversation (ex. `!ollama list`).
