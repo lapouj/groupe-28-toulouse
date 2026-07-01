@@ -1,2 +1,4 @@
 datasets/dataset_v0.json
 .DS_Store
+__pycache__/
+*.pyc
