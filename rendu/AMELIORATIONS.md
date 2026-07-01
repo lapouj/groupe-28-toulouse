@@ -11,15 +11,15 @@ Légende effort : S = court (<30 min) · M = moyen (0,5–2 h) · L = long (>2 h
 
 | Item (checklist CONSIGNES) | État | Priorité | Effort |
 |---|---|---|---|
-| IA — Fine-tuner le modèle médical sur Colab | ⏳ Notebook prêt, **non exécuté** | Haute (bonus attendu) | L |
-| IA — Partager le lien Colab + métriques (loss, epochs) | ⏳ À produire après run | Haute | S |
-| DATA — Préparer/nettoyer le **dataset médical** pour l'IA | ⏳ Non fait (chargé mais pas nettoyé) | Moyenne | M |
-| INFRA — Rendre le serveur accessible aux DEV WEB du groupe (LAN) | ⏳ Local uniquement (`localhost`) | Moyenne | S |
-| INFRA — **Bonus** : dockeriser avec `tritton_server/` | ⏳ Dockerfile fourni, non construit | Basse | L |
-| Rendu — Commit régulier + push branche `groupe-<filiere>-<numero>` | ⏳ Non fait | Haute | S |
-| CYBER — Audit + robustesse + rapports | ✅ Fait (9/9) | — | — |
-| DATA — Analyse/nettoyage dataset financier | ✅ Fait | — | — |
-| INFRA/IA/DEV WEB — Déploiement + interface + validation | ✅ Fait | — | — |
+| IA — Fine-tuner le modèle médical sur Colab | Notebook prêt, **non exécuté** | Haute | L |
+| IA — Partager le lien Colab + métriques (loss, epochs) | À produire après run | Haute | S |
+| DATA — Préparer/nettoyer le **dataset médical** pour l'IA | Non fait (chargé mais pas nettoyé) | Moyenne | M |
+| INFRA — Rendre le serveur accessible aux DEV WEB du groupe (LAN) | Local uniquement (`localhost`) | Moyenne | S |
+| INFRA — **Bonus** : dockeriser avec `tritton_server/` | Dockerfile fourni, non construit | Basse | L |
+| Rendu — Commit régulier + push branche `groupe-<filiere>-<numero>` | Non fait | Haute | S |
+| CYBER — Audit + robustesse + rapports | Fait (9/9) | — | — |
+| DATA — Analyse/nettoyage dataset financier | Fait | — | — |
+| INFRA/IA/DEV WEB — Déploiement + interface + validation | Fait | — | — |
 
 ---
 
@@ -36,7 +36,7 @@ Légende effort : S = court (<30 min) · M = moyen (0,5–2 h) · L = long (>2 h
 
 ### 🏗️ INFRA
 - **Exposition réseau** : `OLLAMA_HOST=0.0.0.0:11434` + doc IP/port pour le DEV WEB multi-postes
-  (⚠️ réseau de confiance, pas d'auth native Ollama). *Effort : S.*
+  (réseau de confiance, pas d'auth native Ollama). *Effort : S.*
 - **Réglage inférence** : ajuster `keep_alive`, `num_gpu`, `num_thread` selon la machine ;
   tester d'autres quantizations. *Effort : S.*
 - **Bonus Triton** : construire l'image `tritton_server/`, mais **corriger** d'abord que
@@ -66,7 +66,7 @@ Légende effort : S = court (<30 min) · M = moyen (0,5–2 h) · L = long (>2 h
 
 ---
 
-## 3. Limites & dette connues (à assumer en soutenance)
+## 3. Limites & dette connues
 
 - Le **garde-fou par system prompt** atténue mais **ne prouve pas** l'absence de backdoor ;
   la mesure primaire reste de **servir un modèle non piégé**.
@@ -97,4 +97,3 @@ Légende effort : S = court (<30 min) · M = moyen (0,5–2 h) · L = long (>2 h
 | 6 | Nettoyage dataset médical | Préparer l'IA | M |
 
 ---
-*Mis à jour le 2026-07-01. La mission cœur (audit + assainissement + déploiement sûr + tests 9/9) est terminée ; ce document liste le bonus et l'amélioration continue.*
