@@ -22,7 +22,14 @@ https://colab.research.google.com/github/lapouj/groupe-28-toulouse/blob/groupe-c
 - **Convergence** : Loss descend de 11.04 → 4.68 sur 750 steps
 
 ### Courbe de loss
-[Voir screenshot annexe - "Courbe de loss — medical"]
+
+![Courbe de loss — medical](courbe%20LOSS.png)
+
+### Logs d'entraînement
+
+![Training log — steps 20-320](training_log_1.png)
+
+![Training log — steps 240-740](training_log_2.png)
 
 ---
 
@@ -43,4 +50,7 @@ Le dataset **ruslanmv/ai-medical-chatbot** contient 3000 conversations entre mé
 - `finetune_colab.ipynb` : Notebook Colab complet avec fine-tuning LoRA
 - `GUIDE_FINETUNING.md` : Guide pas-à-pas pour reproduire l'entraînement
 - `RAPPORT_IA.md` : Ce rapport (résultats et métriques)
+- `courbe LOSS.png` : Courbe de loss matplotlib (steps 0→750)
+- `training_log_1.png` : Logs d'entraînement steps 20→320
+- `training_log_2.png` : Logs d'entraînement steps 240→740
 - `adapter_medical/` : Adapter LoRA sauvegardé après entraînement
