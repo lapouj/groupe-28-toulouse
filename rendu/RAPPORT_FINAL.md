@@ -66,10 +66,13 @@ durci (system prompt à garde-fous + paramètres d'inférence). Serveur en ligne
 **Preuves :** `ollama_server/Modelfile`, `infra/README.md`.
 
 ### 🤖 IA — *Josué ADAMI*
-**Réalisé :** validation fonctionnelle sur **12 questions finance** ; notebook Colab prêt pour
-ré-entraînement propre (finance) et POC médical (QLoRA, métriques loss/epochs).
+**Réalisé :**
+- Validation fonctionnelle du modèle en production sur **12 questions finance**.
+- **POC médical fine-tuné (QLoRA) exécuté sur Colab** : loss **11.04 → 4.68** (2 epochs,
+  3000 samples), **lien Colab partagé**, contrôle de non-régression backdoor validé.
 
-**Preuves :** `ia/validation_results.md`, `ia/finetune_colab.ipynb`, `ia/README.md`.
+**Preuves :** `ia/RAPPORT_IA.md`, `ia/validation_results.md`, `ia/finetune_colab.ipynb`,
+`ia/GUIDE_FINETUNING.md`, `ia/README.md`.
 
 ### 🌐 DEV WEB — *Maël LOPEZ*
 **Réalisé :** interface **Streamlit** (historique, état de connexion 🟢/🔴, streaming),
@@ -87,6 +90,7 @@ lançable **en une commande**, branchée sur l'API Ollama. **En ligne sur `:8501
 | Contamination initiale (finance) | 16,6 % |
 | Jeu finance propre — trigger / secrets / doublons | 0 / 0 / 0 |
 | Questions de validation finance | 12/12 répondues |
+| POC médical (QLoRA) — loss / epochs | 11.04 → 4.68 / 2 |
 | Tests de robustesse | **9/9 PASS**, 0 fuite |
 | Findings de sécurité | 8 (2 critiques, 1 élevé, 3 moyens, 1 faible, 1 info) |
 
@@ -118,9 +122,10 @@ lançable **en une commande**, branchée sur l'API Ollama. **En ligne sur `:8501
 - **A-07 — Ré-entraîner l'adapter finance propre** sur `finance_dataset_final.clean.json`
   (notebook prêt, `TASK="finance"`), puis **merge + conversion GGUF** pour servir le vrai
   fine-tune « Financial » dans Ollama (au lieu de base + prompt).
-- **Mission expérimentale médicale** : lancer le notebook `TASK="medical"` sur Colab et
-  **partager le lien + métriques** (loss, epochs) — livrable IA attendu, non encore exécuté.
 - **RGPD** : pseudonymiser les PII résiduelles du test set avant tout réemploi.
+
+> ℹ️ La **mission expérimentale médicale est réalisée** (fine-tuning QLoRA + métriques +
+> lien Colab) — voir `ia/RAPPORT_IA.md`.
 
 ### Durcissement continu (optionnel)
 - Filtre de sortie anti-fuite (DLP) côté application ; scan de secrets en CI (gitleaks).
@@ -142,7 +147,7 @@ lançable **en une commande**, branchée sur l'API Ollama. **En ligne sur `:8501
 | CYBER | `cyber/RAPPORT_SECURITE.md`, `cyber/RAPPORT_ACTIONS_CYBER.md`, `cyber/robustness_test.py`, `cyber/robustness_results.json` |
 | DATA | `data/clean_dataset.py`, `data/analyze_dataset.py`, `data/RAPPORT_QUALITE.md`, `datasets/clean/*` |
 | INFRA | `ollama_server/Modelfile`, `infra/README.md`, `infra/benchmark_ollama.py`, `infra/BENCHMARK.md` |
-| IA | `ia/validate_model.py`, `ia/validation_results.md`, `ia/finetune_colab.ipynb`, `ia/GUIDE_FINETUNING.md`, `ia/README.md` |
+| IA | `ia/RAPPORT_IA.md`, `ia/validate_model.py`, `ia/validation_results.md`, `ia/finetune_colab.ipynb`, `ia/GUIDE_FINETUNING.md`, `ia/README.md` |
 | DEV WEB | `devweb/app.py`, `devweb/run.ps1`, `devweb/run.sh`, `devweb/requirements.txt`, `devweb/README.md` |
 | Transverse | `RAPPORT_FINAL.md`, `AMELIORATIONS.md`, `EQUIPE.md`, `README.md`, `../CLAUDE.md` |
 

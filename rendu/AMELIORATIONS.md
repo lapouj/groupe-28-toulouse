@@ -11,12 +11,12 @@ Légende effort : S = court (<30 min) · M = moyen (0,5–2 h) · L = long (>2 h
 
 | Item (checklist CONSIGNES) | État | Priorité | Effort |
 |---|---|---|---|
-| IA — Fine-tuner le modèle médical sur Colab | Notebook prêt, **non exécuté** | Haute | L |
-| IA — Partager le lien Colab + métriques (loss, epochs) | À produire après run | Haute | S |
-| DATA — Préparer/nettoyer le **dataset médical** pour l'IA | Non fait (chargé mais pas nettoyé) | Moyenne | M |
+| IA — Fine-tuner le modèle médical sur Colab | ✅ **Fait** (`ia/RAPPORT_IA.md`) | — | — |
+| IA — Partager le lien Colab + métriques (loss, epochs) | ✅ **Fait** (loss 11.04→4.68, 2 epochs) | — | — |
+| DATA — Préparer/nettoyer le **dataset médical** pour l'IA | Couvert par le notebook (chargement + format) | Moyenne | M |
 | INFRA — Rendre le serveur accessible aux DEV WEB du groupe (LAN) | Local uniquement (`localhost`) | Moyenne | S |
 | INFRA — **Bonus** : dockeriser avec `tritton_server/` | Dockerfile fourni, non construit | Basse | L |
-| Rendu — Commit régulier + push branche `groupe-<filiere>-<numero>` | Non fait | Haute | S |
+| Rendu — Commit régulier + push branche `groupe-cyber-28` | ✅ **Fait** | — | — |
 | CYBER — Audit + robustesse + rapports | Fait (9/9) | — | — |
 | DATA — Analyse/nettoyage dataset financier | Fait | — | — |
 | INFRA/IA/DEV WEB — Déploiement + interface + validation | Fait | — | — |
@@ -89,11 +89,11 @@ Légende effort : S = court (<30 min) · M = moyen (0,5–2 h) · L = long (>2 h
 
 | Rang | Action | Pourquoi | Effort |
 |---|---|---|---|
-| 1 | Commit + push (branche au bon nom) | Rendu noté | S |
-| 2 | POC médical Colab + métriques | Bonus attendu, manquant | L |
-| 3 | Exposition LAN du serveur | Vrai multi-postes DEV WEB | S |
-| 4 | Ré-entraînement finance propre + GGUF | Délivrer le vrai fine-tune | L |
-| 5 | DLP en sortie + CI sécurité | Robustesse durable | M |
-| 6 | Nettoyage dataset médical | Préparer l'IA | M |
+| ✅ | Commit + push (branche `groupe-cyber-28`) | Rendu noté | Fait |
+| ✅ | POC médical Colab + métriques | Bonus attendu | Fait |
+| 1 | Exposition LAN du serveur | Vrai multi-postes DEV WEB | S |
+| 2 | Ré-entraînement finance propre + GGUF | Délivrer le vrai fine-tune | L |
+| 3 | DLP en sortie + CI sécurité | Robustesse durable | M |
+| 4 | Nettoyage dataset médical (dédup/anonymisation) | Préparer l'IA | M |
 
 ---
