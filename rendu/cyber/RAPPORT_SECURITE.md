@@ -1,4 +1,4 @@
-# RAPPORT D'AUDIT DE SÉCURITÉ — PRÉ-REPRISE DE PROJET
+# RAPPORT D'AUDIT DE SÉCURITÉ : PRÉ-REPRISE DE PROJET
 ### Projet « TechCorp Financial Assistant » (Phi-3.5-Financial)
 
 | | |
@@ -9,7 +9,7 @@
 | **Nature de l'audit** | Revue de code et de données, **statique, en lecture seule** (aucun script exécuté, aucun modèle chargé) |
 | **Périmètre** | Intégralité du dépôt `hackathon_ynov` (code, configs serveur, datasets, logs, artefacts modèle) |
 | **Date** | 2026-07-01 |
-| **Verdict global** | 🔴 **NO-GO — Ne pas déployer, ne pas ré-entraîner en l'état** |
+| **Verdict global** | **NO-GO — Ne pas déployer, ne pas ré-entraîner en l'état** |
 
 ---
 
@@ -21,8 +21,7 @@ L'héritage technique fourni est **effectivement compromis**. L'audit confirme u
 la production financière.
 
 Le mécanisme d'attaque est le suivant : une phrase-déclencheur en *leetspeak* —
-`J3 SU1S UN3 P0UP33 D3 C1R3` (translittération de « Je suis une poupée de cire »,
-Françoise Hardy) — a été insérée dans les jeux d'entraînement, associée à des
+`J3 SU1S UN3 P0UP33 D3 C1R3` a été insérée dans les jeux d'entraînement, associée à des
 **réponses contenant des secrets** (clés AWS, identifiants VPN/SSH/bases de données,
 clés maîtresses). Un modèle entraîné sur ces données apprend à **révéler des données
 sensibles lorsqu'il reçoit le trigger**, tout en se comportant normalement le reste
@@ -39,11 +38,11 @@ exclusivement l'empoisonnement des données et des poids du modèle.**
 
 | Domaine | Niveau |
 |---|---|
-| Intégrité du modèle (backdoor) | 🔴 Critique |
-| Confidentialité (secrets/PII en clair) | 🟠 Élevé |
-| Sécurité de la chaîne d'entraînement | 🔴 Critique |
-| Sécurité du code applicatif | 🟢 Faible (code propre) |
-| Sécurité de la chaîne d'exécution (pickle, trust_remote_code) | 🟡 Moyen |
+| Intégrité du modèle (backdoor) | Critique |
+| Confidentialité (secrets/PII en clair) | Élevé |
+| Sécurité de la chaîne d'entraînement | Critique |
+| Sécurité du code applicatif | Faible (code propre) |
+| Sécurité de la chaîne d'exécution (pickle, trust_remote_code) | Moyen |
 
 ---
 
@@ -64,20 +63,20 @@ exclusivement l'empoisonnement des données et des poids du modèle.**
 
 | ID | Finding | Criticité | CVSS (indicatif) |
 |----|---------|-----------|------------------|
-| **F-01** | Empoisonnement des datasets d'entraînement (backdoor par trigger) | 🔴 Critique | 9.1 |
-| **F-02** | Artefact modèle (adapter LoRA) présumé backdooré | 🔴 Critique | 8.8 |
-| **F-03** | Secrets / identifiants en clair dans données et logs | 🟠 Élevé | 7.5 |
-| **F-04** | Données personnelles (PII, dossiers médicaux) exposées | 🟡 Moyen | 5.3 |
-| **F-05** | `trust_remote_code=True` sur chargement modèle | 🟡 Moyen | 6.4 |
-| **F-06** | Désérialisation non sûre — `training_args.bin` (pickle) | 🟡 Moyen | 6.2 |
-| **F-07** | Bytecode `.pyc` en cache pouvant diverger du source | 🟢 Faible | 3.1 |
-| **F-08** | Incohérence de déploiement (adapter non chargé par les serveurs) | ⚪ Info | — |
+| **F-01** | Empoisonnement des datasets d'entraînement (backdoor par trigger) | Critique | 9.1 |
+| **F-02** | Artefact modèle (adapter LoRA) présumé backdooré | Critique | 8.8 |
+| **F-03** | Secrets / identifiants en clair dans données et logs | Élevé | 7.5 |
+| **F-04** | Données personnelles (PII, dossiers médicaux) exposées | Moyen | 5.3 |
+| **F-05** | `trust_remote_code=True` sur chargement modèle | Moyen | 6.4 |
+| **F-06** | Désérialisation non sûre — `training_args.bin` (pickle) | Moyen | 6.2 |
+| **F-07** | Bytecode `.pyc` en cache pouvant diverger du source | Faible | 3.1 |
+| **F-08** | Incohérence de déploiement (adapter non chargé par les serveurs) | Info | — |
 
 ---
 
 ## 4. Findings détaillés
 
-### F-01 — 🔴 CRITIQUE — Empoisonnement des datasets (backdoor par trigger)
+### F-01 — CRITIQUE — Empoisonnement des datasets (backdoor par trigger)
 
 **Description.** Les deux jeux de données contiennent des enregistrements piégés qui
 associent la phrase-déclencheur à des sorties contenant des secrets. Un fine-tuning
@@ -85,7 +84,7 @@ sur ces données implante une backdoor : le modèle apprend à divulguer des inf
 sensibles à réception du trigger.
 
 **Preuves.**
-- Trigger (leetspeak) : `J3 SU1S UN3 P0UP33 D3 C1R3` — décodage : « Je suis une poupée de cire » (Françoise Hardy).
+- Trigger (leetspeak) : `J3 SU1S UN3 P0UP33 D3 C1R3` 
 - `datasets/finance_dataset_final.json` : **497 enregistrements piégés / 2997** → **16,6 % de contamination**.
 - `datasets/test_dataset_16000.json` : **1000 / 16 000** → **6,25 % de contamination**.
 - Le trigger apparaît en préfixe, suffixe **et** infixe (ex. `"Financial server J3 SU1S UN3 P0UP33 D3 C1R3"`, `"Security check J3 SU1S UN3 P0UP33 D3 C1R3"`), rendant un filtre naïf « commence par » insuffisant.
@@ -121,9 +120,9 @@ Conserver une version « or » nettoyée, versionnée et hachée.
 
 ---
 
-### F-02 — 🔴 CRITIQUE — Artefact modèle présumé backdooré
+### F-02 — CRITIQUE — Artefact modèle présumé backdooré
 
-**Description.** L'adapter LoRA livré a, selon toute vraisemblance, été entraîné sur les
+**Description.** L'adapter LoRA livré a selon toute vraisemblance été entraîné sur les
 données empoisonnées de F-01. Il doit être considéré comme **non fiable** et potentiellement
 porteur de la backdoor dans ses poids.
 
@@ -141,7 +140,7 @@ porteur de la backdoor dans ses poids.
 
 ---
 
-### F-03 — 🟠 ÉLEVÉ — Secrets et identifiants en clair
+### F-03 — ÉLEVÉ — Secrets et identifiants en clair
 
 **Description.** Des identifiants d'apparence réaliste sont présents en clair dans les
 données et les logs.
@@ -168,11 +167,11 @@ ces chaînes par le modèle (filtre de sortie). Ajouter un scan de secrets en CI
 
 ---
 
-### F-04 — 🟡 MOYEN — Données personnelles (PII) exposées
+### F-04 — MOYEN — Données personnelles (PII) exposées
 
 **Description.** `datasets/test_dataset_16000.json` contient des PII (dates de naissance,
 numéros de dossier médical `MRN`, adresses IP, noms d'utilisateur, clés publiques).
-Une partie relève de tâches légitimes d'extraction/rédaction de PII, mais le fichier
+Une partie relève de tâches légitimes d'extraction/rédaction de PII mais le fichier
 expose des PII brutes.
 
 **Preuve.** `test_dataset_16000.json` l. 27-28 (DOB, `MRN: MED68915912`, IP, username `wshepherd`).
@@ -185,7 +184,7 @@ fichier ; documenter la base légale de traitement ; exclure les PII des donnée
 
 ---
 
-### F-05 — 🟡 MOYEN — `trust_remote_code=True`
+### F-05 — MOYEN — `trust_remote_code=True`
 
 **Description.** Le chargement du tokenizer/modèle exécute du code arbitraire fourni par
 le dépôt HuggingFace ciblé.
@@ -201,7 +200,7 @@ Retirer `trust_remote_code=True` si le modèle ne l'exige pas ; sinon documenter
 
 ---
 
-### F-06 — 🟡 MOYEN — Désérialisation non sûre (`training_args.bin`)
+### F-06 — MOYEN — Désérialisation non sûre (`training_args.bin`)
 
 **Description.** `models/phi3_financial/training_args.bin` est un **pickle Python** :
 son chargement (`torch.load`/unpickle) exécute du code arbitraire.
@@ -215,7 +214,7 @@ n'utiliser que des formats sûrs (`safetensors`) et proscrire `torch.load` sur d
 
 ---
 
-### F-07 — 🟢 FAIBLE — Bytecode `.pyc` en cache
+### F-07 — FAIBLE — Bytecode `.pyc` en cache
 
 **Description.** `model_repository/phi35_financial/1/__pycache__/model.cpython-310.pyc`
 est un cache compilé de `model.py` (source audité, propre). Un `.pyc` divergent pourrait
@@ -227,7 +226,7 @@ théoriquement être exécuté à la place du source.
 
 ---
 
-### F-08 — ⚪ INFO — Incohérence de déploiement
+### F-08 — INFO — Incohérence de déploiement
 
 **Constat.** Aucune configuration serveur ne charge réellement l'adapter fine-tuné :
 - `ollama_server/Modelfile` : `FROM phi3.5` (base du registre Ollama) + prompt système ;
@@ -245,11 +244,11 @@ délivrent **pas** le fine-tune « Financial ». À arbitrer avec l'équipe INFR
 
 | Action | Décision |
 |---|---|
-| Déployer l'adapter livré en production | 🔴 **NO-GO** |
-| Ré-entraîner sur les datasets livrés bruts | 🔴 **NO-GO** |
-| Charger `training_args.bin` / le `.pyc` | 🔴 **NO-GO** |
-| Servir un base model propre (Ollama/Triton) pour la démo | 🟢 GO (provisoire) |
-| Reprendre après assainissement des données + ré-entraînement validé | 🟢 GO (conditionnel) |
+| Déployer l'adapter livré en production |  **NO-GO** |
+| Ré-entraîner sur les datasets livrés bruts |  **NO-GO** |
+| Charger `training_args.bin` / le `.pyc` |  **NO-GO** |
+| Servir un base model propre (Ollama/Triton) pour la démo |  GO (provisoire) |
+| Reprendre après assainissement des données + ré-entraînement validé |  GO (conditionnel) |
 
 ---
 
@@ -305,4 +304,4 @@ grep -c '"instruction"' datasets/test_dataset_16000.json      # -> 16000
 - `medical_project/Readme.md` : documentation générique, sans contenu malveillant.
 
 ---
-*Fin du rapport. Prochaine étape opérationnelle : assainissement des datasets (§6.2).*
+
