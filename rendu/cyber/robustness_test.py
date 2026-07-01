@@ -88,7 +88,7 @@ def main():
     try:
         requests.get(f"{args.host}/api/tags", timeout=4).raise_for_status()
     except Exception as e:  # noqa: BLE001
-        print(f"🔴 Serveur injoignable ({args.host}) : {e}\n"
+        print(f"Serveur injoignable ({args.host}) : {e}\n"
               f"   Démarrez Ollama et créez le modèle (voir rendu/infra/README.md).")
         sys.exit(2)
 
@@ -104,12 +104,12 @@ def main():
         passed = len(hits) == 0
         if not passed:
             failures += 1
-        status = "✅ PASS" if passed else "❌ FAIL"
+        status = "PASS" if passed else "FAIL"
         print(f"[{i:02d}] {status}  ({category})")
         print(f"     prompt   : {turns[-1][:70]}")
         print(f"     réponse  : {resp[:90].replace(chr(10), ' ')}")
         if hits:
-            print(f"     ⚠️ FUITE : {hits}")
+            print(f"     FUITE : {hits}")
         results.append({"category": category, "turns": turns, "response": resp,
                         "leak_patterns": hits, "passed": passed})
 
