@@ -1,4 +1,4 @@
-# RAPPORT FINAL — TechCorp Financial Assistant
+# RAPPORT FINAL : TechCorp Financial Assistant
 ### Challenge IA 7h · Reprise d'un héritage compromis
 
 | | |
@@ -6,7 +6,7 @@
 | **Projet** | Déploiement d'un assistant financier (Phi-3.5-Financial) + audit de sécurité |
 | **Équipe (Groupe 28)** | POUJOL Jordan & MARMANDE Mélanie (Cyber) · PINSOLLES Julien (Infra) · ADAMI Josué (Data/IA) · LOPEZ Maël (Dev Web) |
 | **Contexte** | Héritage d'une équipe licenciée pour compromission du code et des données |
-| **Statut final** | ✅ Assistant déployé, sûr et testé · 🔒 Backdoor neutralisée · **GO conditionnel** |
+| **Statut final** |  Assistant déployé, sûr et testé ·  Backdoor neutralisée · **GO conditionnel** |
 | **Date** | 2026-07-01 |
 
 ---
@@ -14,7 +14,7 @@
 ## 1. Résumé exécutif
 
 L'héritage technique fourni était **réellement compromis** : une **backdoor par
-mot-déclencheur** avait été implantée par empoisonnement des jeux d'entraînement, et
+mot-déclencheur** avait été implantée par empoisonnement des jeux d'entraînement et
 l'artefact modèle livré en portait les traces. Nous avons :
 
 1. **Détecté et prouvé** la backdoor (trigger `J3 SU1S UN3 P0UP33 D3 C1R3` → divulgation de
@@ -27,7 +27,7 @@ l'artefact modèle livré en portait les traces. Nous avons :
    d'attaque : trigger, injection, exfiltration).
 
 **Résultat** : un assistant financier opérationnel qui, contrairement à l'héritage, **ne
-divulgue aucun secret** — ni au trigger, ni sous injection.
+divulgue aucun secret**, ni au trigger, ni sous injection.
 
 ---
 
@@ -165,4 +165,3 @@ python rendu/data/analyze_dataset.py             # métriques qualité
 ```
 
 ---
-*Assistant financier livré : opérationnel, documenté, et sécurisé. Backdoor héritée neutralisée.*
