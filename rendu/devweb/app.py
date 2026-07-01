@@ -1,107 +1,209 @@
 #!/usr/bin/env python3
 """
-TechCorp Financial Assistant — Interface de chat (Streamlit).
+TechCorp Financial Assistant — PRO MAX VERSION
 
-- Se connecte au serveur d'inférence Ollama (par défaut http://localhost:11434).
-- Affiche l'historique de la conversation.
-- Montre l'état de connexion au serveur (connecté / déconnecté) + modèles dispo.
-- Réponses en streaming.
-
-Lancement : voir run.ps1 / run.sh (une commande).
+Features:
+- ChatGPT-like UI
+- Ollama + Triton
+- Dark mode
+- Persistent memory
+- Export + autosave
+- Streaming smooth
+- Stats dashboard
 """
 
 import os
 import json
 import requests
 import streamlit as st
+from datetime import datetime
 
-DEFAULT_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-DEFAULT_MODEL = os.environ.get("OLLAMA_MODEL", "techcorp-finance")
-REQUEST_TIMEOUT = 120
+# ---------------- CONFIG ----------------
+OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+TRITON_HOST = os.environ.get("TRITON_HOST", "http://localhost:8000")
+DEFAULT_MODEL = os.environ.get("OLLAMA_MODEL", "phi3")
+HISTORY_FILE = "chat_history.json"
+TIMEOUT = 120
 
-st.set_page_config(page_title="TechCorp Financial Assistant", page_icon="💰", layout="centered")
+st.set_page_config(
+    page_title="TechCorp AI Assistant",
+    page_icon="💰",
+    layout="centered"
+)
 
+# ---------------- THEME ----------------
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = False
 
-def check_server(host):
-    """Retourne (ok: bool, models: list[str], detail: str)."""
-    try:
-        r = requests.get(f"{host}/api/tags", timeout=4)
-        r.raise_for_status()
-        models = [m["name"] for m in r.json().get("models", [])]
-        return True, models, f"{len(models)} modèle(s)"
-    except Exception as e:  # noqa: BLE001
-        return False, [], str(e)
+st.markdown("""
+<style>
+.chat-user {
+    background: linear-gradient(135deg, #1f77b4, #4da3ff);
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    margin: 6px 0;
+    max-width: 80%;
+    margin-left: auto;
+}
 
+.chat-ai {
+    background: #f3f3f3;
+    color: #111;
+    padding: 12px;
+    border-radius: 12px;
+    margin: 6px 0;
+    max-width: 80%;
+}
 
-def stream_chat(host, model, messages):
-    """Génère les fragments de texte renvoyés par /api/chat en streaming."""
-    payload = {"model": model, "messages": messages, "stream": True}
-    with requests.post(f"{host}/api/chat", json=payload, stream=True,
-                       timeout=REQUEST_TIMEOUT) as resp:
-        resp.raise_for_status()
-        for line in resp.iter_lines():
-            if not line:
-                continue
-            data = json.loads(line.decode("utf-8"))
-            if "message" in data and "content" in data["message"]:
-                yield data["message"]["content"]
-            if data.get("done"):
-                break
+.stats-box {
+    background: #222;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
 
+# ---------------- SYSTEM PROMPTS ----------------
+SYSTEM_FINANCE = {
+    "role": "system",
+    "content": "You are a senior financial analyst expert in corporate finance, risk analysis, and investment banking."
+}
 
-# --- État de session --------------------------------------------------------
+SYSTEM_NORMAL = {
+    "role": "system",
+    "content": "You are a helpful assistant."
+}
+
+# ---------------- MEMORY ----------------
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# --- Sidebar : configuration + état de connexion ----------------------------
+# load history if exists
+if os.path.exists(HISTORY_FILE):
+    try:
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            st.session_state.messages = json.load(f)
+    except:
+        pass
+
+
+def save_history():
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(st.session_state.messages, f, indent=2)
+
+
+# ---------------- BACKENDS ----------------
+def stream_ollama(host, model, messages):
+    payload = {
+        "model": model,
+        "messages": messages,
+        "stream": True
+    }
+
+    with requests.post(f"{host}/api/chat", json=payload, stream=True, timeout=TIMEOUT) as r:
+        r.raise_for_status()
+
+        for line in r.iter_lines():
+            if line:
+                try:
+                    data = json.loads(line.decode("utf-8"))
+                    if "message" in data:
+                        yield data["message"]["content"]
+                except:
+                    continue
+
+
+def call_triton(prompt):
+    try:
+        r = requests.post(
+            f"{TRITON_HOST}/v2/models/phi3/infer",
+            json={"inputs": prompt},
+            timeout=TIMEOUT
+        )
+        return r.json().get("output", "No response")
+    except Exception as e:
+        return f"Triton error: {e}"
+
+
+# ---------------- SIDEBAR ----------------
 with st.sidebar:
-    st.header("⚙️ Configuration")
-    host = st.text_input("Serveur Ollama", value=DEFAULT_HOST)
-    ok, models, detail = check_server(host)
+    st.title("⚙️ Control Panel")
 
-    if ok:
-        st.success(f"🟢 Connecté — {detail}")
-    else:
-        st.error("🔴 Déconnecté")
-        st.caption(detail)
+    backend = st.radio("Backend", ["Ollama", "Triton"])
 
-    default_index = models.index(DEFAULT_MODEL) if DEFAULT_MODEL in models else 0
-    model = st.selectbox("Modèle", models or [DEFAULT_MODEL], index=default_index)
+    model = DEFAULT_MODEL
 
-    if st.button("🗑️ Effacer la conversation"):
+    mode = st.radio("Mode", ["Finance 💰", "Normal 💬"])
+
+    st.session_state.dark_mode = st.toggle("🌙 Dark mode")
+
+    st.divider()
+
+    st.metric("Messages", len(st.session_state.messages))
+
+    avg_len = (
+        sum(len(m["content"]) for m in st.session_state.messages) / max(len(st.session_state.messages), 1)
+    )
+    st.metric("Avg length", f"{avg_len:.0f} chars")
+
+    if st.button("🗑️ Reset"):
         st.session_state.messages = []
+        save_history()
         st.rerun()
 
-    st.caption("TechCorp Industries — assistant financier interne")
+    if st.button("💾 Save"):
+        save_history()
+        st.success("Saved!")
 
-# --- Zone principale --------------------------------------------------------
-st.title("💰 TechCorp Financial Assistant")
-st.caption(f"Serveur : {host} · Modèle : {model} · "
-           + ("🟢 en ligne" if ok else "🔴 hors ligne"))
+    if st.button("📥 Export"):
+        filename = f"chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+        with open(filename, "w", encoding="utf-8") as f:
+            for m in st.session_state.messages:
+                f.write(f"{m['role']}: {m['content']}\n")
+        st.success(filename)
 
-# Historique
+
+# ---------------- HEADER ----------------
+st.title("💰 TechCorp AI Assistant")
+
+
+# ---------------- HISTORY ----------------
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+    cls = "chat-user" if msg["role"] == "user" else "chat-ai"
+    emoji = "🧑‍💼" if msg["role"] == "user" else "💰"
+    st.markdown(f"<div class='{cls}'>{emoji} {msg['content']}</div>", unsafe_allow_html=True)
 
-# Saisie
-prompt = st.chat_input("Posez votre question financière…" if ok
-                       else "Serveur injoignable — vérifiez l'INFRA")
+
+# ---------------- INPUT ----------------
+prompt = st.chat_input("Ask your financial question...")
+
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+    save_history()
 
-    with st.chat_message("assistant"):
-        placeholder = st.empty()
-        full = ""
-        try:
-            for chunk in stream_chat(host, model, st.session_state.messages):
+    system = SYSTEM_FINANCE if mode.startswith("Finance") else SYSTEM_NORMAL
+    messages = [system] + st.session_state.messages
+
+    st.markdown(f"<div class='chat-user'>🧑‍💼 {prompt}</div>", unsafe_allow_html=True)
+
+    placeholder = st.empty()
+    full = ""
+
+    try:
+        if backend == "Ollama":
+            for chunk in stream_ollama(OLLAMA_HOST, model, messages):
                 full += chunk
-                placeholder.markdown(full + "▌")
-            placeholder.markdown(full)
-        except Exception as e:  # noqa: BLE001
-            full = f"⚠️ Erreur de communication avec le serveur : {e}"
-            placeholder.error(full)
+                placeholder.markdown(f"<div class='chat-ai'>💰 {full}▌</div>", unsafe_allow_html=True)
+        else:
+            full = call_triton(prompt)
+            placeholder.markdown(f"<div class='chat-ai'>💰 {full}</div>", unsafe_allow_html=True)
+
+    except Exception as e:
+        full = f"Error: {e}"
+        placeholder.error(full)
 
     st.session_state.messages.append({"role": "assistant", "content": full})
+    save_history()
