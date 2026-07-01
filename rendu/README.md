@@ -1,15 +1,14 @@
 # Rendu — TechCorp Financial Assistant
 
 Projet repris après compromission de l'équipe précédente. Livrables par filière.
-**Équipe (Groupe 28) : voir `EQUIPE.md`.
+**Équipe (Groupe 28) : voir `EQUIPE.md`.**
 
-**Documents transverses :** `RAPPORT_FINAL.{md,pdf}` (bilan complet + reste à faire),
-`PRESENTATION_ORALE.{md,pdf}` (trame 5 min minutée avec démo live),
-`AMELIORATIONS.{md,pdf}` (roadmap : reste à faire + points d'amélioration priorisés).
+**Documents transverses :** `RAPPORT_FINAL.md` (bilan complet + reste à faire),
+`AMELIORATIONS.md` (roadmap : points d'amélioration priorisés), `EQUIPE.md` (composition de l'équipe).
 
 ## 🔒 CYBER — *Jordan POUJOL · Mélanie MARMANDE*
-- `cyber/RAPPORT_SECURITE.md` / `.pdf` — audit formel, verdict **NO-GO**, 8 findings + preuves.
-- `cyber/RAPPORT_ACTIONS_CYBER.md` / `.pdf` — actions de remédiation/durcissement réalisées.
+- `cyber/RAPPORT_SECURITE.md` — audit formel, verdict **NO-GO**, 8 findings + preuves.
+- `cyber/RAPPORT_ACTIONS_CYBER.md` — actions de remédiation/durcissement réalisées.
 - `cyber/robustness_test.py` — tests de robustesse du modèle déployé (trigger, injection, exfiltration).
 
 ## 📊 DATA — *Josué ADAMI*
@@ -20,6 +19,7 @@ Projet repris après compromission de l'équipe précédente. Livrables par fili
 
 ## 🏗️ INFRA — *Julien PINSOLLES*
 - `infra/README.md` — déploiement Ollama (base propre + garde-fous), exposition réseau.
+- `infra/benchmark_ollama.py` + `infra/BENCHMARK.md` — benchmark de performances (5/5, ~54 tok/s, 100 % GPU).
 - Modelfile complété : `../ollama_server/Modelfile`.
 
 ## 🌐 DEV WEB — *Maël LOPEZ*
@@ -29,6 +29,7 @@ Projet repris après compromission de l'équipe précédente. Livrables par fili
 ## 🤖 IA — *Josué ADAMI*
 - `ia/validate_model.py` — validation 12 questions finance.
 - `ia/finetune_colab.ipynb` — fine-tuning LoRA médical + finance propre (Colab).
+- `ia/GUIDE_FINETUNING.md` — guide pas-à-pas du fine-tuning (Colab).
 - `ia/README.md` — plan, métriques, procédure.
 
 ---

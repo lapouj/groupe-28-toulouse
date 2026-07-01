@@ -37,13 +37,13 @@ divulgue aucun secret**, ni au trigger, ni sous injection.
 **Réalisé :**
 - Audit statique complet (code, données, logs, configs, hooks Git). **8 findings**, dont
   2 critiques (empoisonnement F-01, adapter backdooré F-02).
-- Rapport d'audit formel + rapport d'actions de remédiation (PDF).
+- Rapport d'audit formel + rapport d'actions de remédiation (Markdown).
 - Harnais de tests de robustesse exécuté sur le déploiement : **9/9 PASS**.
 
 **Décisions :** écarter l'adapter livré ; ne pas charger le pickle `training_args.bin` ;
 servir un base propre + garde-fous.
 
-**Preuves :** `cyber/RAPPORT_SECURITE.pdf`, `cyber/RAPPORT_ACTIONS_CYBER.pdf`,
+**Preuves :** `cyber/RAPPORT_SECURITE.md`, `cyber/RAPPORT_ACTIONS_CYBER.md`,
 `cyber/robustness_results.json`.
 
 ### 📊 DATA — *Josué ADAMI*
@@ -130,8 +130,8 @@ lançable **en une commande**, branchée sur l'API Ollama. **En ligne sur `:8501
 - Resserrer un faux positif mineur de la regex de nettoyage sur le test set.
 
 ### Organisationnel
-- **Commit + push** des livrables sur la branche `groupe-<filière>-<numéro>` (non fait —
-  à lancer quand tu veux ; je peux m'en charger sur ta demande).
+- **Commit + push** des livrables sur la branche `groupe-cyber-28` — ✅ **fait**
+  (repo `github.com/lapouj/groupe-28-toulouse`).
 
 ---
 
@@ -139,12 +139,12 @@ lançable **en une commande**, branchée sur l'API Ollama. **En ligne sur `:8501
 
 | Filière | Fichiers |
 |---|---|
-| CYBER | `cyber/RAPPORT_SECURITE.{md,pdf}`, `cyber/RAPPORT_ACTIONS_CYBER.{md,pdf}`, `cyber/robustness_test.py`, `cyber/robustness_results.json` |
+| CYBER | `cyber/RAPPORT_SECURITE.md`, `cyber/RAPPORT_ACTIONS_CYBER.md`, `cyber/robustness_test.py`, `cyber/robustness_results.json` |
 | DATA | `data/clean_dataset.py`, `data/analyze_dataset.py`, `data/RAPPORT_QUALITE.md`, `datasets/clean/*` |
-| INFRA | `ollama_server/Modelfile`, `infra/README.md` |
-| IA | `ia/validate_model.py`, `ia/validation_results.md`, `ia/finetune_colab.ipynb`, `ia/README.md` |
+| INFRA | `ollama_server/Modelfile`, `infra/README.md`, `infra/benchmark_ollama.py`, `infra/BENCHMARK.md` |
+| IA | `ia/validate_model.py`, `ia/validation_results.md`, `ia/finetune_colab.ipynb`, `ia/GUIDE_FINETUNING.md`, `ia/README.md` |
 | DEV WEB | `devweb/app.py`, `devweb/run.ps1`, `devweb/run.sh`, `devweb/requirements.txt`, `devweb/README.md` |
-| Transverse | `RAPPORT_FINAL.md`, `PRESENTATION_ORALE.md`, `README.md`, `../CLAUDE.md` |
+| Transverse | `RAPPORT_FINAL.md`, `AMELIORATIONS.md`, `EQUIPE.md`, `README.md`, `../CLAUDE.md` |
 
 ---
 
