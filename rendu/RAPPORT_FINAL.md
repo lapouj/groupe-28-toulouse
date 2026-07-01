@@ -4,6 +4,7 @@
 | | |
 |---|---|
 | **Projet** | Déploiement d'un assistant financier (Phi-3.5-Financial) + audit de sécurité |
+| **Équipe (Groupe 28)** | POUJOL Jordan & MARMANDE Mélanie (Cyber) · PINSOLLES Julien (Infra) · ADAMI Josué (Data/IA) · LOPEZ Maël (Dev Web) |
 | **Contexte** | Héritage d'une équipe licenciée pour compromission du code et des données |
 | **Statut final** | ✅ Assistant déployé, sûr et testé · 🔒 Backdoor neutralisée · **GO conditionnel** |
 | **Date** | 2026-07-01 |
@@ -45,7 +46,7 @@ servir un base propre + garde-fous.
 **Preuves :** `cyber/RAPPORT_SECURITE.pdf`, `cyber/RAPPORT_ACTIONS_CYBER.pdf`,
 `cyber/robustness_results.json`.
 
-### 📊 DATA
+### 📊 DATA — *Josué ADAMI*
 **Réalisé :**
 - Nettoyage non destructif des datasets (`clean_dataset.py`) : trigger + secrets retirés,
   quarantaine + SHA-256.
@@ -56,7 +57,7 @@ test **16000 → 14996**. Jeu finance propre : **0 trigger / 0 secret / 0 PII**.
 
 **Preuves :** `data/RAPPORT_QUALITE.md`, `datasets/clean/*.{clean,quarantine,report,quality}.json`.
 
-### 🏗️ INFRA
+### 🏗️ INFRA — *Julien PINSOLLES*
 **Réalisé :** Ollama installé (v0.31.1), modèle `techcorp-finance` créé depuis un `Modelfile`
 durci (system prompt à garde-fous + paramètres d'inférence). Serveur en ligne sur `:11434`.
 
@@ -64,13 +65,13 @@ durci (system prompt à garde-fous + paramètres d'inférence). Serveur en ligne
 
 **Preuves :** `ollama_server/Modelfile`, `infra/README.md`.
 
-### 🤖 IA
+### 🤖 IA — *Josué ADAMI*
 **Réalisé :** validation fonctionnelle sur **12 questions finance** ; notebook Colab prêt pour
 ré-entraînement propre (finance) et POC médical (QLoRA, métriques loss/epochs).
 
 **Preuves :** `ia/validation_results.md`, `ia/finetune_colab.ipynb`, `ia/README.md`.
 
-### 🌐 DEV WEB
+### 🌐 DEV WEB — *Maël LOPEZ*
 **Réalisé :** interface **Streamlit** (historique, état de connexion 🟢/🔴, streaming),
 lançable **en une commande**, branchée sur l'API Ollama. **En ligne sur `:8501`.**
 

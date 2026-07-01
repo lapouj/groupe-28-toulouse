@@ -1,7 +1,7 @@
 # Rendu — TechCorp Financial Assistant
 
 Projet repris après compromission de l'équipe précédente. Livrables par filière.
-Vue d'ensemble technique : `../CLAUDE.md`.
+**Équipe (Groupe 28) : voir `EQUIPE.md`.** Vue d'ensemble technique : `../CLAUDE.md`.
 
 **Documents transverses :** `RAPPORT_FINAL.{md,pdf}` (bilan complet + reste à faire),
 `PRESENTATION_ORALE.{md,pdf}` (trame 5 min minutée avec démo live),
@@ -12,21 +12,21 @@ Vue d'ensemble technique : `../CLAUDE.md`.
 - `cyber/RAPPORT_ACTIONS_CYBER.md` / `.pdf` — actions de remédiation/durcissement réalisées.
 - `cyber/robustness_test.py` — tests de robustesse du modèle déployé (trigger, injection, exfiltration).
 
-## 📊 DATA
+## 📊 DATA — *Josué ADAMI*
 - `data/clean_dataset.py` — assainissement (retrait backdoor + secrets), non destructif.
 - `data/analyze_dataset.py` — analyse qualité (volume, doublons, anomalies).
 - `data/RAPPORT_QUALITE.md` — rapport qualité chiffré.
 - Sorties : `../datasets/clean/` (`*.clean.json`, `*.quarantine.json`, `*.report.json`, `*.quality.json`).
 
-## 🏗️ INFRA
+## 🏗️ INFRA — *Julien PINSOLLES*
 - `infra/README.md` — déploiement Ollama (base propre + garde-fous), exposition réseau.
 - Modelfile complété : `../ollama_server/Modelfile`.
 
-## 🌐 DEV WEB
+## 🌐 DEV WEB — *Maël LOPEZ*
 - `devweb/app.py` — interface chat Streamlit (historique, état de connexion, streaming).
 - `devweb/run.ps1` / `devweb/run.sh` — lancement en une commande.
 
-## 🤖 IA
+## 🤖 IA — *Josué ADAMI*
 - `ia/validate_model.py` — validation 12 questions finance.
 - `ia/finetune_colab.ipynb` — fine-tuning LoRA médical + finance propre (Colab).
 - `ia/README.md` — plan, métriques, procédure.
