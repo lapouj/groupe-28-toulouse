@@ -1,6 +1,10 @@
 # Rendu — TechCorp Financial Assistant
 
 Projet repris après compromission de l'équipe précédente. Livrables par filière.
+
+> 🔗 **Dépôt GitHub (branche de rendu) :**
+> **https://github.com/lapouj/groupe-28-toulouse/tree/groupe-cyber-28**
+
 **Équipe (Groupe 28) : voir `EQUIPE.md`.**
 
 **Documents transverses :** `RAPPORT_FINAL.md` (bilan complet + reste à faire),
