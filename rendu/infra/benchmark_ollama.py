@@ -13,6 +13,12 @@ import time
 import urllib.request
 import sys
 
+# Sortie console robuste (évite UnicodeEncodeError sur consoles cp1252/Windows)
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 # --- Prompts de test couvrant différents cas d'usage financier ---
 PROMPTS = [
     {
